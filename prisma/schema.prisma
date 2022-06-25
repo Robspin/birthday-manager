@@ -1,0 +1,16 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model birthday {
+  id         Int       @id @default(autoincrement())
+  name       String?   @db.VarChar(50)
+  birthday   DateTime? @db.Date
+  relation   String?   @db.VarChar(50)
+  created_at DateTime  @default(dbgenerated("CURRENT_DATE")) @db.Date
+}

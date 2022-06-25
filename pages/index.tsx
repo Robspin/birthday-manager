@@ -1,17 +1,22 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
+import Link from "next/link"
 
-const Home: NextPage = () => {
+
+const Home = () => {
   return (
-    <div>
-      <Head>
-        <title>Green Temple</title>
-        <meta name="description" content="Let's grow together" />
-        <link rel="icon" href="/seedling.png" />
-      </Head>
-      <h1 className="underline text-4xl text-orange-400">lmao</h1>
-    </div>
+        <div className="flex justify-center items-center">
+            <div className="flex flex-col items-center">
+                <h1 className="text-4xl text-orange-400 font-bold tracking-widest mt-[12rem]">
+                    BIRTHDAY DATABASE
+                </h1>
+                <Link href="/manage">
+                    <h4 className="text-orange-100 underline text-2xl cursor-pointer mt-4">
+                        View & Edit
+                    </h4>
+                </Link>
+            </div>
+        </div>
   )
 }
 
 export default Home
+
