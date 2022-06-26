@@ -1,34 +1,18 @@
-import { birthday, PrismaClient } from "@prisma/client"
-import { useState } from "react"
-
-const BirthdayItem = ({ b }: { b: birthday }) => {
-    const [showEdit, setShowEdit] = useState(false)
-
-    return (
-        <ul className="text-orange-400 flex w-[40rem] px-[5rem] justify-between relative" onMouseEnter={() => setShowEdit(true)} onMouseLeave={() => setShowEdit(false)}>
-            <li>
-                {b.name}
-            </li>
-            <li>
-                {`${b.birthday}`.substring(0,10)}
-            </li>
-            <li>
-                {b.relation}
-            </li>
-            <li className={`${!showEdit ? 'pointer-events-none' : 'cursor-pointer'} underline absolute right-0 transition-opacity ${!showEdit ? 'opacity-0' : 'opacity-100'} `}>
-                edit
-            </li>
-        </ul>
-    )
-}
-
+import { birthday } from "@prisma/client"
+import prisma from "../../prisma/prisma"
+import BirthdayItem from "../../components/BirthdayItem"
+import AddBirthdayForm from "../../components/AddBirthdayForm"
+import {useState} from "react"
 
 const View = ({ initialBirthdays }: { initialBirthdays: birthday[] }) => {
+    const [birthdays, setBirthdays] = useState<birthday[]>(initialBirthdays)
+    const [editMode, setEditMode] = useState(false)
 
     return (
         <div className="flex flex-col h-screen w-screen items-center justify-center">
+            <AddBirthdayForm editMode={editMode} setEditMode={setEditMode} setBirthdays={setBirthdays} birthdays={birthdays} />
             <div>
-            {initialBirthdays.map(b =>  <BirthdayItem b={b} key={b.id} />)}
+            {birthdays.map(b =>  <BirthdayItem b={b} key={b.id} setEditMode={setEditMode} />)}
             </div>
         </div>
     )
@@ -37,7 +21,6 @@ const View = ({ initialBirthdays }: { initialBirthdays: birthday[] }) => {
 export default View
 
 export async function getServerSideProps() {
-    const prisma = new PrismaClient()
     const birthdays: birthday[] = await prisma.birthday.findMany()
 
     for (const b of birthdays) {
