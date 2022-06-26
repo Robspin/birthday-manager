@@ -1,6 +1,5 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from "../../prisma/prisma"
+import prisma from "../../../prisma/prisma"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const birthdayData = JSON.parse(req.body)

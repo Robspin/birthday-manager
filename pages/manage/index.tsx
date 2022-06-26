@@ -1,18 +1,19 @@
 import { birthday } from "@prisma/client"
 import prisma from "../../prisma/prisma"
 import BirthdayItem from "../../components/BirthdayItem"
-import AddBirthdayForm from "../../components/AddBirthdayForm"
-import {useState} from "react"
+import BirthdayForm from "../../components/BirthdayForm"
+import { useState } from "react"
 
 const View = ({ initialBirthdays }: { initialBirthdays: birthday[] }) => {
     const [birthdays, setBirthdays] = useState<birthday[]>(initialBirthdays)
     const [editMode, setEditMode] = useState(false)
+    const [editItem, setEditItem] = useState<birthday | null>(null)
 
     return (
         <div className="flex flex-col h-screen w-screen items-center justify-center">
-            <AddBirthdayForm editMode={editMode} setEditMode={setEditMode} setBirthdays={setBirthdays} birthdays={birthdays} />
+            <BirthdayForm editMode={editMode} setEditMode={setEditMode} setBirthdays={setBirthdays} birthdays={birthdays} setEditItem={setEditItem} editItem={editItem} />
             <div>
-            {birthdays.map(b =>  <BirthdayItem b={b} key={b.id} setEditMode={setEditMode} />)}
+            {birthdays.map(b =>  <BirthdayItem b={b} key={b.id} setEditMode={setEditMode} setEditItem={setEditItem} />)}
             </div>
         </div>
     )
@@ -21,7 +22,11 @@ const View = ({ initialBirthdays }: { initialBirthdays: birthday[] }) => {
 export default View
 
 export async function getServerSideProps() {
-    const birthdays: birthday[] = await prisma.birthday.findMany()
+    const birthdays: birthday[] = await prisma.birthday.findMany({
+        orderBy: [{
+            id: 'asc'
+        }]
+    })
 
     for (const b of birthdays) {
         b.birthday = JSON.parse(JSON.stringify(b.birthday))
